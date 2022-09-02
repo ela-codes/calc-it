@@ -1,8 +1,13 @@
+@font-face{
+    font-family:'digital-clock-font';
+    src: url('digital-7 _mono.ttf');
+}
+
 body {
     padding: 0;
     color:rgb(71, 71, 82);
     text-align: center;
-    font-size: 18px;
+    font-size: 22px;
     font-family: Verdana, sans-serif;
     display: flex;
     flex-direction: column;
@@ -13,9 +18,10 @@ body {
 .container {
     display: flex;
     flex-direction: column;
-    border: 1px solid;
-    padding: 25px 25px 25px 25px;
-    width: 350px;
+    padding: 30px;
+    width: 500px;
+    border-radius: 1%;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 .time {
@@ -23,17 +29,39 @@ body {
     padding-left: 10px;
     
 }
-.calculator {
-    display: flex;
-    flex-direction: column;
-    
-}
 
 .displayScreen{
+    border-radius: 2%;
     background-color:rgb(215, 215, 218);
-    margin: 10px;
+    padding: 20px;
     width: auto;
-    height: 150px;
+    height: 180px;
+    text-align: right;
+    font-family: 'digital-clock-font', sans-serif;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.historyDisplay{
+    font-size: 40px;
+    margin-bottom: 40px;
+}
+
+.currentDisplay{
+    height: 100px;
+    font-size: 5em;
+}
+
+.shrinkDisplay1{
+    font-size: 4em;
+}
+
+.shrinkDisplay2{
+    font-size: 3.5em;
+}
+
+.shrinkDisplay3{
+    font-size: 2.4em;
 }
 
 .clear {
@@ -42,12 +70,17 @@ body {
 
 button {
     color:rgb(71, 71, 82);
-    font-size: 25px;
-    width: 75px;
-    height: 82px;
+    font-size: 38px;
+    width: 105px;
+    height: 112px;
     border-radius: 50%;
     border: 0;
-    margin: 2px;
+    margin: 3px;
+}
+
+button:hover {
+    background-color: darkgray;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 footer {

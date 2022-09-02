@@ -28,3 +28,47 @@ function divide(x, y) {
 function operate(operator, x, y) {
     return operator(x, y)
 }
+
+/* button functionality */
+
+let digitCount = 0;
+
+const buttons = document.querySelectorAll("button")
+const currDisplay = document.querySelector(".currentDisplay")
+buttons.forEach(btn => btn.addEventListener("click", e => displayCharacter(e)))
+
+
+function displayCharacter(e) {
+    const lengthBoundaries = [7, 10, 13]
+
+    if (digitCount % 3 === 0 && digitCount !== 0) {
+        currDisplay.textContent += ","
+    }
+    if ((digitCount < 15) && (e.target.classList[0] === "num")) {
+        digitCount++
+        currDisplay.textContent += e.target.innerHTML
+        if (lengthBoundaries.includes(getDisplayCharLength())) {
+            changeDisplayFont(getDisplayCharLength())
+        }
+    }
+}
+
+function getDisplayCharLength() {
+    return (currDisplay.innerHTML).length
+}
+
+
+function changeDisplayFont(charLength) {
+    switch (charLength) {
+        case 7:
+            currDisplay.classList.add("shrinkDisplay1")
+            break;
+        case 10:
+            currDisplay.classList.add("shrinkDisplay2")
+            break;
+        case 13:
+            currDisplay.classList.add("shrinkDisplay3")
+            break;
+    }
+}
+
