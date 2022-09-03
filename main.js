@@ -39,14 +39,15 @@ buttons.forEach(btn => btn.addEventListener("click", e => displayCharacter(e)))
 
 
 function displayCharacter(e) {
-    const lengthBoundaries = [7, 10, 13]
+    const lengthBoundaries = [7, 9, 13]
 
-    if (digitCount % 3 === 0 && digitCount !== 0) {
+    if (digitCount % 3 === 0 && digitCount !== 0 && digitCount < 15) {
         currDisplay.textContent += ","
     }
     if ((digitCount < 15) && (e.target.classList[0] === "num")) {
         digitCount++
         currDisplay.textContent += e.target.innerHTML
+        
         if (lengthBoundaries.includes(getDisplayCharLength())) {
             changeDisplayFont(getDisplayCharLength())
         }
@@ -63,7 +64,7 @@ function changeDisplayFont(charLength) {
         case 7:
             currDisplay.classList.add("shrinkDisplay1")
             break;
-        case 10:
+        case 9:
             currDisplay.classList.add("shrinkDisplay2")
             break;
         case 13:
