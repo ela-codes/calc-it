@@ -8,9 +8,7 @@ function displayTime() {
 }
 
 
-
-// mathematical functions
-
+// MATHEMATICAL FUNCTIONS
 function add(x, y) {
     return x + y
 }
@@ -41,8 +39,7 @@ function operate(operator, x, y) {
 }
 
 
-
-// global variables
+// GLOBAL VARIABLES
 let digitCount = 0
 let decimalCount = 0
 let stored = []
@@ -51,39 +48,65 @@ let currOperator = ""
 let operand = ""
 
 
-
-// button and display functionality
-
+// EVENT LISTENERS
 const buttons = document.querySelectorAll("button")
 const currDisplay = document.querySelector(".currentDisplay")
 buttons.forEach(btn => btn.addEventListener("click", e => applyUserInput(e)))
 
 
-
+// checks what button was pressed by user then calls other handler functions
 function applyUserInput(e) {
-    console.log("count " + digitCount)
-    console.log(operand)
-    // checks what button was pressed by user then calls other handler functions
-    if (e.target.classList[0] === "num") {
-        displayNumber(e)
-        storeOperand(e)
-    } else if (e.target.classList[0] === "clear")
-        clearAll()
+    switch (e.target.classList[0]) {
+        case "num":
+            displayNumber(e)
+            storeOperand(e)
+            break
+        case "clear":
+            clearAll()
+            break
+        case "backspace":
+            backspace()
+    }
 
-    if (digitCount > 0) { // a number should exist before a decimal or an operator
+    if (digitCount > 0) { // number comes before a decimal or an operator
         if (e.target.classList[0] === "operator") {
+            console.log(e.target.classList)
+            displayCharacter(e)
             storeUserInput(e)
             if (stored.length === 2) {calculateExpression(e)}
-            decimalCount === 1 ? decimalCount -- : decimalCount = 0 // resets back to zero 
-        } else if (e.target.classList[0] === "decimal" && decimalCount === 0) { // only 1 decimal allowed per operand
+            decimalCount === 1 ? decimalCount -- : decimalCount = 0 // reset it for new operand
+        } else if (e.target.classList[0] === "decimal" && decimalCount === 0) { // 1 decimal per operand
             decimalCount++
-            displayDecimal(e)
+            displayCharacter(e)
             storeOperand(e)
         }
     }
 }
 
-// non-operational related functions
+
+
+// OPERATOR-RELATED FUNCTIONS
+function storeUserInput(e) {
+    stored.push(Number(operand))  // change to Number type in order to be calculable
+    operand = ""
+    if (stored.length === 1) {
+        currOperator = e.target.classList[1]
+    }
+}
+
+
+
+function calculateExpression(e) {
+    calculated = operate(currOperator, stored[0], stored[1])
+    displayCalculated()
+    stored = [calculated]
+    digitCount++
+    console.log("stored value: " + stored)
+    
+}
+
+
+// DISPLAY-RELATED FUNCTIONS
 function clearAll() {
     currDisplay.textContent = ""
     digitCount = 0
@@ -94,17 +117,14 @@ function clearAll() {
 }
 
 
-// history display
-function updateDisplay() {
-    currDisplay.textContent = calculated
+function backspace() {
+    currDisplay.textContent = currDisplay.textContent.slice(0,-1)
+    operand = operand.slice(0,-1)
 }
 
 
-
-// number-related functions 
-
-function storeOperand(e) {
-    operand += e.target.innerHTML
+function displayCalculated() {
+    currDisplay.textContent = calculated
 }
 
 
@@ -117,6 +137,7 @@ function displayNumber(e) {
     if (digitCount < 15) {
         digitCount++
         currDisplay.textContent += e.target.innerHTML
+        console.log("Displaying '" + e.target.innerHTML + "'")
         
         if (lengthBoundaries.includes(getDisplayCharLength())) {
             changeDisplayFont(getDisplayCharLength())
@@ -128,6 +149,7 @@ function displayNumber(e) {
 function getDisplayCharLength() {
     return (currDisplay.innerHTML).length
 }
+
 
 function changeDisplayFont(charLength) {
     switch (charLength) {
@@ -143,32 +165,21 @@ function changeDisplayFont(charLength) {
     }
 }
 
-function displayDecimal(e) {
+
+const addition = document.querySelector(".add")
+function displayCharacter(e) {
     currDisplay.textContent += e.target.innerHTML
+    console.log("Adding to display.. '" + e.target.innerHTML + "'")
+    console.log(currDisplay)
 }
 
 
+// NUMBER-RELATED FUNCTIONS
 
-// operator-related functions
-function storeUserInput(e) {
-    currDisplay.textContent += e.target.innerHTML
-    stored.push(Number(operand))  // change to Number type in order to be calculable
-    operand = ""
-    if (stored.length === 1) {
-        currOperator = e.target.classList[1]
-    }
-    console.log(stored)
+function storeOperand(e) {
+    operand += e.target.innerHTML
 }
 
-
-
-function calculateExpression(e) {
-    calculated = operate(currOperator, stored[0], stored[1])
-    updateDisplay()
-    stored = [calculated]
-    digitCount++
-    
-}
 
 
 
