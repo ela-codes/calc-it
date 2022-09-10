@@ -45,12 +45,12 @@ let decimalCount = 0
 let stored = []
 let calculated = 0
 let currOperator = ""
-let operand = ""
+let operand = ""  // temp variable
+const currDisplay = document.querySelector(".currentDisplay")
 
 
 // EVENT LISTENERS
 const buttons = document.querySelectorAll("button")
-const currDisplay = document.querySelector(".currentDisplay")
 buttons.forEach(btn => btn.addEventListener("click", e => applyUserInput(e)))
 
 
@@ -59,27 +59,35 @@ function applyUserInput(e) {
     switch (e.target.classList[0]) {
         case "num":
             displayNumber(e)
-            storeOperand(e)
+            setAsOperand(e)
             break
         case "clear":
             clearAll()
             break
         case "backspace":
             backspace()
-    }
+            break
+        case "decimal":
+            if (decimalCount === 0) { // 1 decimal per operand
+                decimalCount++
+                setAsOperand(e)
+                displayCharacter(e)
+            }
+            break
+        case "operator":
+            if (digitCount > 0) { // number comes before a decimal or an operator
+                console.log(digitCount)
+                storeUserInput(e)
+                displayCharacter(e)
+                decimalCount === 1 ? decimalCount -- : decimalCount = 0 // reset it for new operand
+    
+                if (stored.length === 2) {
+                    calculateExpression()
 
-    if (digitCount > 0) { // number comes before a decimal or an operator
-        if (e.target.classList[0] === "operator") {
-            console.log(e.target.classList)
-            displayCharacter(e)
-            storeUserInput(e)
-            if (stored.length === 2) {calculateExpression(e)}
-            decimalCount === 1 ? decimalCount -- : decimalCount = 0 // reset it for new operand
-        } else if (e.target.classList[0] === "decimal" && decimalCount === 0) { // 1 decimal per operand
-            decimalCount++
-            displayCharacter(e)
-            storeOperand(e)
-        }
+                }
+            }
+            console.log(stored)
+            break
     }
 }
 
@@ -95,14 +103,12 @@ function storeUserInput(e) {
 }
 
 
-
-function calculateExpression(e) {
+function calculateExpression() {
     calculated = operate(currOperator, stored[0], stored[1])
     displayCalculated()
-    stored = [calculated]
     digitCount++
-    console.log("stored value: " + stored)
-    
+    stored = [] // removes previous expression
+    operand = calculated
 }
 
 
@@ -166,17 +172,15 @@ function changeDisplayFont(charLength) {
 }
 
 
-const addition = document.querySelector(".add")
 function displayCharacter(e) {
     currDisplay.textContent += e.target.innerHTML
-    console.log("Adding to display.. '" + e.target.innerHTML + "'")
-    console.log(currDisplay)
+    console.log("displaying non-numeric: " + e.target.innerHTML)
 }
 
 
 // NUMBER-RELATED FUNCTIONS
 
-function storeOperand(e) {
+function setAsOperand(e) {
     operand += e.target.innerHTML
 }
 
