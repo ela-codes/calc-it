@@ -23,6 +23,7 @@ function multiply(x, y) {
 
 function divide(x, y) {
     return x / y
+
 }
 
 function operate(operator, x, y) {
@@ -54,7 +55,7 @@ const buttons = document.querySelectorAll("button")
 buttons.forEach(btn => btn.addEventListener("click", e => applyUserInput(e)))
 
 
-// checks what button was pressed by user then calls other handler functions
+// Checks what button was pressed by user then calls other handler functions
 function applyUserInput(e) {
     switch (e.target.classList[0]) {
         case "num":
@@ -72,22 +73,15 @@ function applyUserInput(e) {
                 decimalCount++
                 setAsOperand(e)
                 displayCharacter(e)
-            }
-            break
+            } break
         case "operator":
             if (digitCount > 0) { // number comes before a decimal or an operator
-                console.log(digitCount)
                 storeUserInput(e)
                 displayCharacter(e)
                 decimalCount === 1 ? decimalCount -- : decimalCount = 0 // reset it for new operand
     
-                if (stored.length === 2) {
-                    calculateExpression()
-
-                }
-            }
-            console.log(stored)
-            break
+                if (stored.length === 2) {calculateExpression()}
+            } break
     }
 }
 
@@ -104,11 +98,15 @@ function storeUserInput(e) {
 
 
 function calculateExpression() {
-    calculated = operate(currOperator, stored[0], stored[1])
-    displayCalculated()
-    digitCount++
-    stored = [] // removes previous expression
-    operand = calculated
+    if (currOperator === "divide" && stored[1] === 0) {
+        divisionByZeroError()
+    } else {
+        calculated = operate(currOperator, stored[0], stored[1])
+        displayCalculated()
+        digitCount++
+        stored = [] // removes previous expression
+        operand = calculated
+    }
 }
 
 
@@ -177,6 +175,10 @@ function displayCharacter(e) {
     console.log("displaying non-numeric: " + e.target.innerHTML)
 }
 
+function divisionByZeroError() {
+    currDisplay.textContent = "B R U H"
+    setTimeout(function() {clearAll()}, 3000)
+}
 
 // NUMBER-RELATED FUNCTIONS
 
