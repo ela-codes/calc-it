@@ -23,7 +23,6 @@ function multiply(x, y) {
 
 function divide(x, y) {
     return x / y
-
 }
 
 function operate(operator, x, y) {
@@ -47,6 +46,8 @@ let stored = []
 let calculated = 0
 let currOperator = ""
 let operand = ""  // temp variable
+let calculatedNum = false
+const nums = "0123456789"
 const currDisplay = document.querySelector(".currentDisplay")
 
 
@@ -66,20 +67,24 @@ function applyUserInput(e) {
             clearAll()
             break
         case "backspace":
-            backspace()
+            if (!calculatedNum) {backspace()}
             break
         case "decimal":
-            if (decimalCount === 0) { // 1 decimal per operand
+            console.log(decimalCount, calculatedNum)
+            if (decimalCount === 0 && !calculatedNum) { // 1 decimal per operand. Cant add decimal to a calculated number.
+                if (!nums.includes(getLastCharOnDisplay(currDisplay))) { 
+                    getDecimalPlaceholder()
+                }
                 decimalCount++
                 setAsOperand(e)
                 displayCharacter(e)
             } break
         case "operator":
-            if (digitCount > 0) { // number comes before a decimal or an operator
+            if (digitCount > 0) { // number comes before an operator
                 storeUserInput(e)
                 displayCharacter(e)
                 decimalCount === 1 ? decimalCount -- : decimalCount = 0 // reset it for new operand
-    
+                calculatedNum = false // reset 
                 if (stored.length === 2) {calculateExpression()}
             } break
     }
@@ -114,10 +119,12 @@ function calculateExpression() {
 function clearAll() {
     currDisplay.textContent = ""
     digitCount = 0
+    decimalCount = 0
     stored = []
     calculated = 0
     currOperator = ""
     operand = ""
+    calculatedNum = false
 }
 
 
@@ -129,6 +136,7 @@ function backspace() {
 
 function displayCalculated() {
     currDisplay.textContent = calculated
+    calculatedNum = true
 }
 
 
@@ -180,10 +188,18 @@ function divisionByZeroError() {
     setTimeout(function() {clearAll()}, 3000)
 }
 
+function getLastCharOnDisplay(display) {
+    let lastChar = display.innerHTML[display.innerHTML.length-1]
+    return lastChar
+}
 // NUMBER-RELATED FUNCTIONS
 
 function setAsOperand(e) {
     operand += e.target.innerHTML
+}
+
+function getDecimalPlaceholder() {
+    currDisplay.textContent += "0"
 }
 
 
