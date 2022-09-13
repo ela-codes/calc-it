@@ -56,9 +56,13 @@ const buttons = document.querySelectorAll("button")
 buttons.forEach(btn => btn.addEventListener("click", e => applyUserInput(e)))
 
 
+// Restrictions:
+// Calculated numbers cannot be modified (ie. can only be operated on not extended by other numbers or a decimal)
+
+
+
 // Checks what button was pressed by user then calls other handler functions
 function applyUserInput(e) {
-    console.log(currOperator)
     switch (e.target.classList[0]) {
         case "num":
             if (!calculatedNum) {
@@ -72,8 +76,7 @@ function applyUserInput(e) {
             if (!calculatedNum) {backspace()}
             break
         case "decimal":
-            console.log(decimalCount, calculatedNum)
-            if (decimalCount === 0 && !calculatedNum) { // 1 decimal per operand. Cant add decimal to a calculated number.
+            if (decimalCount === 0 && !calculatedNum) { // 1 decimal per operand
                 if (!nums.includes(getLastCharOnDisplay())) { 
                     getDecimalPlaceholder()
                 }
@@ -91,12 +94,17 @@ function applyUserInput(e) {
             if (nums.includes(getLastCharOnDisplay())) { // number comes before an operator
                 storeUserInput(e)
                 displayCharacter(e)
-                if (stored.length === 2) {calculateExpression()}
+                
+                if (stored.length === 2) { // if x and y operands are present, calculate it and display as current operator
+                    calculateExpression()
+                    storeUserInput(e)
+                    displayCharacter(e)
+                }
+                if (stored.length === 1) {currOperator = e.target.classList[1]} // if only x is present, apply as current operator
                 decimalCount === 1 ? decimalCount-- : decimalCount = 0
-                calculatedNum = false
+                calculatedNum = false // reset it for new operand
             } break
     }
-    
 }
 
 
@@ -105,10 +113,6 @@ function applyUserInput(e) {
 function storeUserInput(e) {
     stored.push(Number(operand))  // change to Number type in order to be calculable
     operand = ""
-    if (stored.length === 1) {
-        currOperator = e.target.classList[1]
-    } 
-    console.log("current storage: " + stored)
 }
 
 
