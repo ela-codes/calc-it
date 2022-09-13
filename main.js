@@ -58,11 +58,13 @@ buttons.forEach(btn => btn.addEventListener("click", e => applyUserInput(e)))
 
 // Checks what button was pressed by user then calls other handler functions
 function applyUserInput(e) {
+    console.log(currOperator)
     switch (e.target.classList[0]) {
         case "num":
-            displayNumber(e)
-            setAsOperand(e)
-            break
+            if (!calculatedNum) {
+                displayNumber(e)
+                setAsOperand(e)
+            } break
         case "clear":
             clearAll()
             break
@@ -72,22 +74,29 @@ function applyUserInput(e) {
         case "decimal":
             console.log(decimalCount, calculatedNum)
             if (decimalCount === 0 && !calculatedNum) { // 1 decimal per operand. Cant add decimal to a calculated number.
-                if (!nums.includes(getLastCharOnDisplay(currDisplay))) { 
+                if (!nums.includes(getLastCharOnDisplay())) { 
                     getDecimalPlaceholder()
                 }
                 decimalCount++
                 setAsOperand(e)
                 displayCharacter(e)
             } break
+        case "equal":
+            if (currOperator !== "") {
+                storeUserInput(e)
+                calculateExpression()
+                decimalCount === 1 ? decimalCount-- : decimalCount = 0 // reset it for new operand
+            } break
         case "operator":
-            if (digitCount > 0) { // number comes before an operator
+            if (nums.includes(getLastCharOnDisplay())) { // number comes before an operator
                 storeUserInput(e)
                 displayCharacter(e)
-                decimalCount === 1 ? decimalCount -- : decimalCount = 0 // reset it for new operand
-                calculatedNum = false // reset 
                 if (stored.length === 2) {calculateExpression()}
+                decimalCount === 1 ? decimalCount-- : decimalCount = 0
+                calculatedNum = false
             } break
     }
+    
 }
 
 
@@ -98,7 +107,8 @@ function storeUserInput(e) {
     operand = ""
     if (stored.length === 1) {
         currOperator = e.target.classList[1]
-    }
+    } 
+    console.log("current storage: " + stored)
 }
 
 
@@ -111,6 +121,7 @@ function calculateExpression() {
         digitCount++
         stored = [] // removes previous expression
         operand = calculated
+        currOperator = ""
     }
 }
 
@@ -188,8 +199,8 @@ function divisionByZeroError() {
     setTimeout(function() {clearAll()}, 3000)
 }
 
-function getLastCharOnDisplay(display) {
-    let lastChar = display.innerHTML[display.innerHTML.length-1]
+function getLastCharOnDisplay() {
+    let lastChar = currDisplay.innerHTML[currDisplay.innerHTML.length-1]
     return lastChar
 }
 // NUMBER-RELATED FUNCTIONS
