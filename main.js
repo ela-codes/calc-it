@@ -150,7 +150,7 @@ function backspace() {
 
 
 function displayCalculated() {
-    currDisplay.textContent = calculated
+    currDisplay.textContent = calculated.toFixed(3)
     calculatedNum = true
 }
 
