@@ -58,6 +58,7 @@ buttons.forEach(btn => btn.addEventListener("click", e => applyUserInput(e)))
 
 // Restrictions:
 // Calculated numbers cannot be modified (ie. can only be operated on not extended by other numbers or a decimal)
+// Accepts a max # of 15 characters (14 digits & 1 operator)
 
 
 
@@ -76,7 +77,7 @@ function applyUserInput(e) {
             if (!calculatedNum) {backspace()}
             break
         case "decimal":
-            if (decimalCount === 0 && !calculatedNum) { // 1 decimal per operand
+            if (digitCount < 13 && decimalCount === 0 && !calculatedNum) { // 1 decimal per operand
                 if (!nums.includes(getLastCharOnDisplay())) { 
                     getDecimalPlaceholder()
                 }
@@ -150,25 +151,29 @@ function backspace() {
 
 
 function displayCalculated() {
-    currDisplay.textContent = calculated.toFixed(3)
+    let result = String(calculated)
+    let decimalIdx = result.indexOf(".")
+    let decimalLength = result.substring(decimalIdx).length
+
+    if (decimalIdx > -1 && decimalLength > 3) {
+        currDisplay.textContent = calculated.toFixed(3)
+    } else {
+        currDisplay.textContent = calculated
+    }
     calculatedNum = true
 }
 
 
 function displayNumber(e) {
-    const lengthBoundaries = [7, 9, 13]
-
-    // if (digitCount % 3 === 0 && digitCount !== 0 && digitCount < 15) {
-    //     currDisplay.textContent += ","
-    // }
-    if (digitCount < 15) {
+    // const lengthBoundaries = [7, 9, 12]
+    if (digitCount < 14) {
         digitCount++
-        currDisplay.textContent += e.target.innerHTML
+        displayCharacter(e)
         console.log("Displaying '" + e.target.innerHTML + "'")
         
-        if (lengthBoundaries.includes(getDisplayCharLength())) {
-            changeDisplayFont(getDisplayCharLength())
-        }
+        // if (lengthBoundaries.includes(getDisplayCharLength())) {
+        //     changeDisplayFont(getDisplayCharLength())
+        // }
     }
 }
 
@@ -178,19 +183,19 @@ function getDisplayCharLength() {
 }
 
 
-function changeDisplayFont(charLength) {
-    switch (charLength) {
-        case 7:
-            currDisplay.classList.add("shrinkDisplay1")
-            break;
-        case 9:
-            currDisplay.classList.add("shrinkDisplay2")
-            break;
-        case 13:
-            currDisplay.classList.add("shrinkDisplay3")
-            break;
-    }
-}
+// function changeDisplayFont(charLength) {
+//     switch (charLength) {
+//         case 7:
+//             currDisplay.classList.add("shrinkDisplay1")
+//             break
+//         case 9:
+//             currDisplay.classList.add("shrinkDisplay2")
+//             break
+//         case 12:
+//             currDisplay.classList.add("shrinkDisplay3")
+//             break
+//     }
+// }
 
 
 function displayCharacter(e) {

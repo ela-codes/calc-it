@@ -39,7 +39,7 @@ body {
 .calculator {
     border-radius: 12px;
     background-color: #131318;
-    padding: 20px 30px 20px;
+    padding: 20px 30px 10px;
 }
 
 .time {
@@ -52,8 +52,7 @@ body {
     background-color: #373a4b;
     padding: 20px;
     width: auto;
-    height: 180px;
-    text-align: right;
+    height: 100px;
     font-family: 'digital-clock-font', sans-serif;
     margin-top: 10px;
     margin-bottom: 37px;
@@ -61,21 +60,24 @@ body {
 }
 
 .currentDisplay{
-    margin-top: 30px;
-    font-size: 5em;
-}
-
-.shrinkDisplay1{
-    font-size: 4em;
-}
-
-.shrinkDisplay2{
+    display: flex;
+    line-height: 100px;
+    justify-content: flex-end;
+    align-items: center;
     font-size: 3em;
 }
 
-.shrinkDisplay3{
-    font-size: 2.3em;
+/* .shrinkDisplay1{
+    font-size: 4.5em;
 }
+
+.shrinkDisplay2{
+    font-size: 4em;
+}
+
+.shrinkDisplay3{
+    font-size: 3em;
+} */
 
 .buttons {
     display: flex;
@@ -113,9 +115,9 @@ body {
 button {
     background-color: #373a4b;
     color: #f8f8f2;
-    font-size: 34px;
+    font-size: 30px;
     width: 76px;
-    height: 90px;
+    height: 83px;
     border: 0;
     margin: 5px;
     border-radius: 12px;
