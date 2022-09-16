@@ -1,4 +1,4 @@
-
+// TIME FUNCTION
 window.onload = displayTime()
 
 function displayTime() {
@@ -47,7 +47,9 @@ let calculated = 0
 let currOperator = ""
 let operand = ""  // temp variable
 let calculatedNum = false
+let calcHistory = []
 const nums = "0123456789"
+const ops = "+-÷×"
 const currDisplay = document.querySelector(".currentDisplay")
 
 
@@ -57,12 +59,12 @@ buttons.forEach(btn => btn.addEventListener("click", e => applyUserInput(e)))
 
 
 // Restrictions:
-// Calculated numbers cannot be modified (ie. can only be operated on not extended by other numbers or a decimal)
+// Calculated numbers cannot be modified (ie. can only be operated on. Not extended by other numbers or a decimal)
 // Accepts a max # of 15 characters (14 digits & 1 operator)
 
 
 
-// Checks what button was pressed by user then calls other handler functions
+// MAIN FUNCTION -- Checks what button was pressed then calls other handler functions
 function applyUserInput(e) {
     switch (e.target.classList[0]) {
         case "num":
@@ -90,12 +92,13 @@ function applyUserInput(e) {
                 storeUserInput(e)
                 calculateExpression()
                 decimalCount === 1 ? decimalCount-- : decimalCount = 0 // reset it for new operand
-            } break
+            } 
+            break
         case "operator":
-            if (nums.includes(getLastCharOnDisplay())) { // number comes before an operator
+            if (nums.includes(getLastCharOnDisplay())) {  // number comes before an operator
                 storeUserInput(e)
                 displayCharacter(e)
-                
+
                 if (stored.length === 2) { // if x and y operands are present, calculate it and display as current operator
                     calculateExpression()
                     storeUserInput(e)
@@ -103,9 +106,13 @@ function applyUserInput(e) {
                 }
                 if (stored.length === 1) {currOperator = e.target.classList[1]} // if only x is present, apply as current operator
                 decimalCount === 1 ? decimalCount-- : decimalCount = 0
-                calculatedNum = false // reset it for new operand
+                calculatedNum = false
             } break
     }
+    // console.log("operator is " + currOperator)
+    // console.log("operand is " + operand)
+    // console.log(stored)
+    // console.log(calculatedNum)
 }
 
 
@@ -145,8 +152,17 @@ function clearAll() {
 
 
 function backspace() {
+    if (ops.includes(getLastCharOnDisplay())) {
+        currOperator = ""
+        operand = String(stored.pop())
+    } else if (getLastCharOnDisplay === ".") {
+        decimalCount --
+    } else {
+        if (operand === "") {operand = String(stored.pop())}
+        operand = operand.slice(0,-1)
+        digitCount--
+    }
     currDisplay.textContent = currDisplay.textContent.slice(0,-1)
-    operand = operand.slice(0,-1)
 }
 
 
@@ -168,7 +184,7 @@ function displayNumber(e) {
     // const lengthBoundaries = [7, 9, 12]
     if (digitCount < 14) {
         digitCount++
-        displayCharacter(e)
+        currDisplay.textContent += e.target.innerHTML
         console.log("Displaying '" + e.target.innerHTML + "'")
         
         // if (lengthBoundaries.includes(getDisplayCharLength())) {
@@ -200,7 +216,7 @@ function getDisplayCharLength() {
 
 function displayCharacter(e) {
     currDisplay.textContent += e.target.innerHTML
-    console.log("displaying non-numeric: " + e.target.innerHTML)
+    console.log("Displaying non-numeric: " + e.target.innerHTML)
 }
 
 function divisionByZeroError() {
@@ -212,6 +228,8 @@ function getLastCharOnDisplay() {
     let lastChar = currDisplay.innerHTML[currDisplay.innerHTML.length-1]
     return lastChar
 }
+
+
 // NUMBER-RELATED FUNCTIONS
 
 function setAsOperand(e) {
